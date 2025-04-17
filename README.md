@@ -5,3 +5,5 @@ Main components:
 2. Create charts for display
 3. Create sentiment analysis and pull articles related to stock.
 4. Implement LLM
+
+Sentiment analysis - uses library Textblob for calculating polarity and library NewsAPI to pull articles.
