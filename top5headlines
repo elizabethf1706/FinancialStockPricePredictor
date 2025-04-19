@@ -1,0 +1,28 @@
+# This file is to call apis for sentiment analysis.
+# note youll have to download TEXTBLOB and NEWSAPI and python.
+# imports the library with textlob so we can use it
+from datetime import datetime, timedelta
+# imports newsapi to pull news.
+from newsapi import NewsApiClient
+
+newsapi = NewsApiClient(api_key='8f2e5849e7144acba9d5a9201c3b3542')
+# stock keyword needs to be given by user, but we will use tesla to test this for now.
+stock_keyword = "TESLA"
+ 
+
+# pull time, calculate and format date.
+# NOTE: NEWSAPI free plan onle goes back A MONTH
+end_date = datetime.now()
+start_date = end_date - timedelta(days=30)
+
+
+# headlines is a obj that gets top 5 most popular articles from last 30 days.
+headlines = newsapi.get_everything(
+    q=stock_keyword,
+    language='en',
+    sort_by='popularity',
+    from_param= start_date.strftime('%Y-%m-%d'),
+    to = end_date.strftime('%Y-%m-%d'),  
+    page_size=5  # max is 100.
+)
+
