@@ -1,28 +1,41 @@
-# This file is to call apis for sentiment analysis.
-# note youll have to download TEXTBLOB and NEWSAPI and python.
+# This file calls apis to pull top 5 relevant headlines for a given stock word and prints them.
+# note youll have to download NEWSAPI and python.
 # imports the library with textlob so we can use it
 from datetime import datetime, timedelta
 # imports newsapi to pull news.
 from newsapi import NewsApiClient
 
-newsapi = NewsApiClient(api_key='8f2e5849e7144acba9d5a9201c3b3542')
-# stock keyword needs to be given by user, but we will use tesla to test this for now.
-stock_keyword = "TESLA"
  
+def get_top_headlines(api_key, stock_keyword): 
+    "pull top 5 headlines for a stock and prints them"
+    # NOTE: NEWSAPI free plan only goes back A MONTH
+    # we set the time and date to use as args for newsapi.
+    end_date = datetime.now()
+    start_date = end_date - timedelta(days=30)
 
-# pull time, calculate and format date.
-# NOTE: NEWSAPI free plan onle goes back A MONTH
-end_date = datetime.now()
-start_date = end_date - timedelta(days=30)
 
+    # headlines is a obj that gets top 5 most relevant articles from last 30 days.
+    
+    try:
+        headlines = newsapi.get_everything(
+                q=stock_keyword,
+                language='en',
+                sort_by='relevancy',
+                from_param= start_date.strftime('%Y-%m-%d'),
+                to = end_date.strftime('%Y-%m-%d'),  
+                page_size=5  # max is 100.
+            )
+    except Exception as e:
+        print(f"Problem getting articles from NewsAPI: {e}")
+        return None
+        
 
-# headlines is a obj that gets top 5 most popular articles from last 30 days.
-headlines = newsapi.get_everything(
-    q=stock_keyword,
-    language='en',
-    sort_by='popularity',
-    from_param= start_date.strftime('%Y-%m-%d'),
-    to = end_date.strftime('%Y-%m-%d'),  
-    page_size=5  # max is 100.
-)
-
+    if headlines['status'] == 'ok':
+        print(f"\nTop 5 news headlines for: {stock_keyword}\n")
+        for i, article in enumerate(headlines['articles'], 1):
+            print(f"{i}. {article['title']}")
+            print(f"   Source: {article['source']['name']}")
+            print(f"   Published: {article['publishedAt']}")
+            print(f"   URL: {article['url']}\n")
+    else:
+        print("Error fetching headlines:", headlines.get("message"))
