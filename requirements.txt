@@ -1,0 +1,5 @@
+textblob
+newsapi-python
+matplotlib
+streamlit
+python-dotenv 
