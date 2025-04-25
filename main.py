@@ -2,12 +2,11 @@
 
 import streamlit as st 
 import os              
-from dotenv import load_dotenv 
-
+from dotenv import load_dotenv
 
 from sentiment_analyzer import get_sentiment_analysis   
 from sentiment_visualizer import plot_sentiment_distribution 
-
+from news_word_cloud import get_wordcloud
 load_dotenv()
 NEWS_API_KEY = os.getenv('NEWS_API_KEY')
 
@@ -31,7 +30,7 @@ if st.button("Analyze Sentiment"):
         # spinning wheel while the analysis is happening
         with st.spinner('Fetching and analyzing news...'):
             analysis_results = get_sentiment_analysis(NEWS_API_KEY, stock_keyword)
-
+            wordcloud_results = get_wordcloud(NEWS_API_KEY, stock_keyword)
 
 
         # if we got results back
@@ -61,3 +60,10 @@ if st.button("Analyze Sentiment"):
         else:
             # maybe no articles or API error stuff
             st.error(f"Couldn't get or analyze news for '{stock_keyword}'. Maybe check the ticker or try again later?") 
+        if wordcloud_results:
+            st.success("Analysis complete!")
+            st.pyplot(wordcloud_results)  
+        else:
+            st.error(f"Couldn't make wordcloud for '{stock_keyword}'. Maybe check the ticker or try again later?") 
+        # generate word cloud
+       
