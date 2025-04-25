@@ -3,3 +3,5 @@ newsapi-python
 matplotlib
 streamlit
 python-dotenv 
+requests
+wordcloud 
