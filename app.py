@@ -14,8 +14,8 @@ home_page = st.Page("home_page.py", title="Home Page")
 pages = st.navigation([login_page, home_page])
 
 # const globals for page names
-st.session_state["stock_search_page"] = "login_page.py"
-st.session_state["finance_analysis_page"] = "home_page.py"
+st.session_state["stock_search_page"] = "get_stock_page.py"
+st.session_state["finance_analysis_page"] = "finance_analysis.py"
 #st.session_state["stock"] = ""
 
 
