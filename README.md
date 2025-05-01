@@ -1,9 +1,13 @@
 This project aims to analyze and predict future prices of stocks using llms. Main components:
 
-    1.Data pulling to feed for analysis
-    2.Create charts for display
-    3.Create sentiment analysis and pull articles related to stock.
-    4.Implement LLM
+    1. Data pulling to feed for analysis
+    2. Create charts for display
+    3. Create sentiment analysis and pull articles related to stock.
+    4. Implement LLM
+        - vector db to embed earning calls and feed to AI.
+        - training our own model using time series model and tensorflor.
+        - creating agents using langchain 
+        - implementing groq to use multiple models
 
 Sentiment analysis - uses library Textblob for calculating polarity and library NewsAPI to pull articles.
 
@@ -26,7 +30,7 @@ So how's it laid out?
 2.  **Install stuff (if you haven't):** Open your terminal *in this project folder* and run `pip3 install -r requirements.txt` (or `pip3`, `python3 -m pip`, whatever works for you).
 3.  **Run it!:** In the same terminal, just type:
     ```
-    python3 -m streamlit run main.py
+    python3 -m streamlit run main.py 
     ```
     That should pop open the app in your browser.
 
