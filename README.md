@@ -5,7 +5,7 @@ This project aims to analyze and predict future prices of stocks using llms. Mai
     3. Create sentiment analysis and pull articles related to stock.
     4. Implement LLM
         - vector db to embed earning calls and feed to AI.
-        - training our own model using time series model and tensorflor.
+        - training our own model using time series model and tensorflow.
         - creating agents using langchain 
         - implementing groq to use multiple models
 
