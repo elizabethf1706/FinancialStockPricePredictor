@@ -5,3 +5,4 @@ streamlit
 python-dotenv 
 requests
 wordcloud 
+groq
