@@ -10,7 +10,7 @@ from news_word_cloud import get_wordcloud
 from predict_stock_groq import predictStockPrice
 load_dotenv()
 NEWS_API_KEY = os.getenv('NEWS_API_KEY')
-
+GROQ_API_KEY = os.getenv('GROQ_API_KEY')
 
 st.title("Stock News Sentiment Analyzer")
 
@@ -32,7 +32,7 @@ if st.button("Analyze Sentiment"):
         with st.spinner('Fetching and analyzing news...'):
             analysis_results = get_sentiment_analysis(NEWS_API_KEY, stock_keyword)
             wordcloud_results = get_wordcloud(NEWS_API_KEY, stock_keyword)
-            stock_prediction = predictStockPrice(stock_keyword)
+            stock_prediction = predictStockPrice(GROQ_API_KEY, stock_keyword)
 
         # if we got results back
         if analysis_results:
