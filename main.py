@@ -1,4 +1,4 @@
-# So here we actually start our main entry point for our Streamlit app
+# now uses env file for keys
 
 import streamlit as st 
 import os              
