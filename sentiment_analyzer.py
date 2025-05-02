@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from newsapi import NewsApiClient
 import os # Need this to check for the API key env var
 
-def get_sentiment_analysis(api_key, stock_keyword):
+def get_sentiment_analysis(NEWS_API_KEY, stock_keyword):
     """Grabs news for a stock and figures out the sentiment.
 
     Needs:
@@ -19,12 +19,12 @@ def get_sentiment_analysis(api_key, stock_keyword):
      A dictionary with the results (counts, percentages, etc.)
      or None if something went wrong (like no articles found).
     """
-    newsapi = NewsApiClient(api_key=api_key)
+    newsapi = NewsApiClient(api_key=NEWS_API_KEY)
 
     # pull time, calculate and format date.
     # NOTE: NEWSAPI free plan only goes back A MONTH
     end_date = datetime.now()
-    start_date = end_date - timedelta(days=30)
+    start_date = end_date - timedelta(days=28)
 
     try:
         # articles is a newsapi object and it defines the lang, date, uses stock name to search articles.
