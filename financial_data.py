@@ -1,3 +1,4 @@
+import os
 from alpha_vantage.timeseries import TimeSeries
 import pandas as pd
 
@@ -8,8 +9,9 @@ def get_StockSummary(api_key, symbol):
         data, meta = ts.get_daily(symbol=symbol, outputsize='full')
 
         data.index = pd.to_datetime(data.index)
-        one_year_ago = pd.Timestamp.today() - pd.DateOffset(years=.6)
-        recent_data = data[data.index >= one_year_ago]
+        # Adjusted to use months=6 instead of fractional years
+        six_months_ago = pd.Timestamp.today() - pd.DateOffset(months=6)
+        recent_data = data[data.index >= six_months_ago]
 
         recent_data = recent_data.rename(columns={
             '1. open': 'Open',
