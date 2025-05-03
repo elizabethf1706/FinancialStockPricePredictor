@@ -34,7 +34,7 @@ if st.button("Analyze Sentiment"):
             analysis_results = get_sentiment_analysis(NEWS_API_KEY, stock_keyword)
             wordcloud_results = get_wordcloud(NEWS_API_KEY, stock_keyword)
             financial_results = get_StockSummary(ALPHA_API_KEY, stock_keyword) 
-            stock_prediction = predictStockPrice(GROQ_API_KEY, stock_keyword,financial_results)
+            stock_prediction = predictStockPrice(GROQ_API_KEY, stock_keyword,financial_results,analysis_results)
 
         # if we got results back
         if analysis_results:
