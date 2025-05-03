@@ -28,7 +28,8 @@ So how's it laid out?
 
 1.  **Check the `.env` file:** Make sure your NewsAPI key is in there
 2.  **Install stuff (if you haven't):** Open your terminal *in this project folder* and run `pip3 install -r requirements.txt` (or `pip3`, `python3 -m pip`, whatever works for you).
-3.  **Run it!:** In the same terminal, just type:
+3.  Edit the env file to add the 3 required api keys
+4.  **Run it!:** In the same terminal, just type:
     ```
     python3 -m streamlit run main.py 
     ```
