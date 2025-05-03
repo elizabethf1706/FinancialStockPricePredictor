@@ -8,7 +8,7 @@ def get_StockSummary(api_key, symbol):
         data, meta = ts.get_daily(symbol=symbol, outputsize='full')
 
         data.index = pd.to_datetime(data.index)
-        one_year_ago = pd.Timestamp.today() - pd.DateOffset(years=1)
+        one_year_ago = pd.Timestamp.today() - pd.DateOffset(years=.6)
         recent_data = data[data.index >= one_year_ago]
 
         recent_data = recent_data.rename(columns={
