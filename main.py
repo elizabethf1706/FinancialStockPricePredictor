@@ -73,6 +73,7 @@ if st.button("Analyze Sentiment"):
             st.error(f"Couldn't make wordcloud for '{stock_keyword}'. Maybe check the ticker or try again later?") 
         
          # checks to make sure stockd results is returned then outputs them
+    
         if stock_prediction and financial_results:
             st.success("Here is the predicted analysis: ")
             st.write(stock_prediction)  
