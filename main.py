@@ -8,10 +8,11 @@ from sentiment_analyzer import get_sentiment_analysis
 from sentiment_visualizer import plot_sentiment_distribution 
 from news_word_cloud import get_wordcloud
 from predict_stock_groq import predictStockPrice
+from financial_data import get_StockSummary
 load_dotenv()
 NEWS_API_KEY = os.getenv('NEWS_API_KEY')
 GROQ_API_KEY = os.getenv('GROQ_API_KEY')
-
+ALPHA_API_KEY = os.getenv('ALPHA_API_KEY')
 st.title("Stock News Sentiment Analyzer")
 
 st.write("""
@@ -32,7 +33,8 @@ if st.button("Analyze Sentiment"):
         with st.spinner('Fetching and analyzing news...'):
             analysis_results = get_sentiment_analysis(NEWS_API_KEY, stock_keyword)
             wordcloud_results = get_wordcloud(NEWS_API_KEY, stock_keyword)
-            stock_prediction = predictStockPrice(GROQ_API_KEY, stock_keyword)
+            financial_results = get_StockSummary(ALPHA_API_KEY, stock_keyword) 
+            stock_prediction = predictStockPrice(GROQ_API_KEY, stock_keyword,financial_results)
 
         # if we got results back
         if analysis_results:
@@ -71,7 +73,7 @@ if st.button("Analyze Sentiment"):
             st.error(f"Couldn't make wordcloud for '{stock_keyword}'. Maybe check the ticker or try again later?") 
         
          # checks to make sure stockd results is returned then outputs them
-        if stock_prediction:
+        if stock_prediction and financial_results:
             st.success("Here is the predicted analysis: ")
             st.write(stock_prediction)  
         else:
