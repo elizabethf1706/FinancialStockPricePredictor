@@ -6,3 +6,5 @@ python-dotenv
 requests
 wordcloud 
 groq
+alpha_vantage>=2.3.1
+pandas
