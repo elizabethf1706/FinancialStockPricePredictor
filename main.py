@@ -9,6 +9,8 @@ from sentiment_visualizer import plot_sentiment_distribution
 from news_word_cloud import get_wordcloud
 from predict_stock_groq import predictStockPrice
 from financial_data import get_StockSummary
+from earnings_transcript import get_earnings_call_transcript
+
 load_dotenv()
 NEWS_API_KEY = os.getenv('NEWS_API_KEY')
 GROQ_API_KEY = os.getenv('GROQ_API_KEY')
@@ -26,6 +28,7 @@ stock_keyword = st.text_input("Enter Stock Ticker or Company Name:", "TSLA")
 if st.button("Analyze Sentiment"):
     if not stock_keyword:
         st.warning("Please enter a stock keyword to analyze.")
+
     else:
         st.write(f"Okay, looking for news about '{stock_keyword}'...")
 
@@ -34,15 +37,19 @@ if st.button("Analyze Sentiment"):
             analysis_results = get_sentiment_analysis(NEWS_API_KEY, stock_keyword)
             wordcloud_results = get_wordcloud(NEWS_API_KEY, stock_keyword)
             financial_results = get_StockSummary(ALPHA_API_KEY, stock_keyword) 
-            stock_prediction = predictStockPrice(GROQ_API_KEY, stock_keyword,financial_results,analysis_results)
+            stock_prediction = predictStockPrice(GROQ_API_KEY, stock_keyword, financial_results, analysis_results)
+            recent_trascript = get_earnings_call_transcript(ALPHA_API_KEY, stock_keyword, "2024Q4")
+            #TODO: Find a way to get most recent quarter for earnings call
+            # quarter = "2024Q4" for now.
 
-        # if we got results back
-        if analysis_results:
+
+
+
+        if analysis_results: # if we got results back
             st.success("Sentiment Analysis complete!")
 
-            # now we just display them
+            # the metrics
             st.subheader("Analysis Results:")
-            # Some just columns for arrangement
             col1, col2, col3 = st.columns(3)
             col1.metric("Positive Articles", f"{analysis_results['positive_count']}", f"{analysis_results['positive_pct']:.1f}%")
             col2.metric("Negative Articles", f"{analysis_results['negative_count']}", f"{analysis_results['negative_pct']:.1f}%")
@@ -58,25 +65,32 @@ if st.button("Analyze Sentiment"):
                 negative_count=analysis_results['negative_count'],
                 neutral_count=analysis_results['neutral_count'],
                 stock_keyword=analysis_results['stock'],
-                st=st 
-            )
+                st=st )
+            
         else:
-            # maybe no articles or API error stuff
             st.error(f"Couldn't get or analyze news for '{stock_keyword}'. Maybe check the ticker or try again later?") 
-        # checks to make sure word cloud results is returned then outputs them
-        if wordcloud_results:
+        
+
+        if wordcloud_results: # checks to make sure word cloud results is returned then outputs them
             st.success("Wordcloud complete!")
             st.pyplot(wordcloud_results) 
-            
-        # if wordcloud isnt made returns error 
+
         else:
             st.error(f"Couldn't make wordcloud for '{stock_keyword}'. Maybe check the ticker or try again later?") 
         
-         # checks to make sure stockd results is returned then outputs them
-    
-        if stock_prediction and financial_results:
+
+        
+        if stock_prediction and financial_results: # checks to make sure stocks results is returned then outputs them
             st.success("Here is the predicted analysis: ")
             st.write(stock_prediction)  
         else:
             st.error(f"Couldn't make stock analysis for '{stock_keyword}'. Maybe check the ticker or try again later?") 
-       
+
+
+        if recent_trascript: # checks to make sure earnings call results is returned then outputs them
+            # Grok: Earning Calls, News, etc.   
+            st.subheader("🤖Ask Grok")
+            st.write("Ask Grok about something related to the stock.")
+            
+
+            user_input = st.text_input("Ask Grok:", "What is the sentiment of the news?")
