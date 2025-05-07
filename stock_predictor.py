@@ -7,32 +7,32 @@ from datetime import datetime, timedelta
 import plotly.graph_objects as go
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 
-def get_5_month_stock_data(ticker, months="5"):
+def get_5_month_stock_data(ticker, months=5):
     """
-    get historical stock data from Yahoo
-    
+    Get historical stock data from Yahoo for the last `months` months.
+
     Args:
         ticker (str): stock ticker symbol
-        period (str): time to download (1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max)
-        
+        months (int): number of months of historical data to retrieve
+
     Returns:
-        dataframe with stock data
+        DataFrame or None: stock data
     """
     try:
-    
         ticker = ticker.upper().strip()
         end_date = datetime.today()
-        start_date = end_date - timedelta(days=months * 30)  # Approximate 30 days per month
+        start_date = end_date - timedelta(days=months * 30)  # Approximate
 
         data = yf.download(ticker, start=start_date, end=end_date)
 
-    
-        if data.empty:
+        if data.empty or len(data) < 10:
+            print(f"[WARN] Not enough data for {ticker}")
             return None
-            
+
         return data
+
     except Exception as e:
-        print(f"Error fetching stock data: {e}")
+        print(f"[ERROR] Error fetching stock data for {ticker}: {e}")
         return None
 def get_stock_data(ticker, period="1y"):
     """
