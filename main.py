@@ -9,13 +9,12 @@ from predict_stock_groq import predictStockPrice
 from financial_data import get_StockSummary
 from stock_predictor import get_5_month_stock_data, get_stock_data, get_tomorrow_forecast, prepare_data_for_prophet, train_prophet_model, evaluate_model
 import plotly.graph_objects as go
-from dotenv import load_dotenv
-load_dotenv() 
+
 
 # Load API keys
-NEWS_API_KEY = os.getenv("NEWS_API_KEY")
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-ALPHA_API_KEY = os.getenv("ALPHA_API_KEY")
+NEWS_API_KEY = st.secrets["NEWS_API_KEY"]
+GROQ_API_KEY = st.secrets["GROQ_API_KEY"]
+ALPHA_API_KEY = st.secrets["ALPHA_API_KEY"]
 
 st.title("Stock News Sentiment Analyzer")
 
