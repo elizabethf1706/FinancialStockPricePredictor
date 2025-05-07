@@ -7,7 +7,7 @@ from sentiment_visualizer import plot_sentiment_distribution
 from news_word_cloud import get_wordcloud
 from predict_stock_groq import predictStockPrice
 from financial_data import get_StockSummary
-from stock_predictor import get_stock_data, get_tomorrow_forecast, prepare_data_for_prophet, train_prophet_model, evaluate_model
+from stock_predictor import get_5_month_stock_data, get_stock_data, get_tomorrow_forecast, prepare_data_for_prophet, train_prophet_model, evaluate_model
 import plotly.graph_objects as go
 from dotenv import load_dotenv
 load_dotenv() 
@@ -76,7 +76,7 @@ if sentiment_clicked:
         with st.spinner('Fetching and analyzing news...'):
             analysis_results = get_sentiment_analysis(NEWS_API_KEY, stock_keyword)
             wordcloud_results = get_wordcloud(NEWS_API_KEY, stock_keyword)
-            financial_results = get_StockSummary(ALPHA_API_KEY, stock_keyword) 
+            financial_results = get_5_month_stock_data(stock_keyword) 
             stock_prediction = predictStockPrice(GROQ_API_KEY, stock_keyword, financial_results, analysis_results)
 
         if analysis_results:
