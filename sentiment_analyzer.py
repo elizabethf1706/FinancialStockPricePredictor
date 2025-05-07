@@ -50,11 +50,9 @@ def get_sentiment_analysis(NEWS_API_KEY, stock_keyword):
     neutral = 0
     
     for article in articles['articles']:
-    # this combines the title, description and content, and the '' is used in case
-    # there is a missing item.
         art_combined = (
-            (article.get('title') or '') + ' ' + # Added space
-            (article.get('description') or '') + ' ' + # Added space
+            (article.get('title') or '') + ' ' + 
+            (article.get('description') or '') + ' ' + 
             (article.get('content') or '')
         )
 
