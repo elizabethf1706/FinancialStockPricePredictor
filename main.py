@@ -3,6 +3,7 @@
 import streamlit as st 
 import os              
 from dotenv import load_dotenv
+import chromadb
 
 from sentiment_analyzer import get_sentiment_analysis   
 from sentiment_visualizer import plot_sentiment_distribution 
@@ -15,6 +16,12 @@ load_dotenv()
 NEWS_API_KEY = os.getenv('NEWS_API_KEY')
 GROQ_API_KEY = os.getenv('GROQ_API_KEY')
 ALPHA_API_KEY = os.getenv('ALPHA_API_KEY')
+client = chromadb.PersistentClient()
+collection = client.get_or_create_collection("database")
+#TODO: might want to cosider using "st.cache_resource" so this doesn't run on every refresh
+#      also so it works between scripts
+print("Database & collection created")
+
 st.title("Stock News Sentiment Analyzer")
 
 st.write("""
@@ -87,8 +94,7 @@ if st.button("Analyze Sentiment"):
             st.error(f"Couldn't make stock analysis for '{stock_keyword}'. Maybe check the ticker or try again later?") 
 
 
-        if recent_trascript: # checks to make sure earnings call results is returned then outputs them
-            # Grok: Earning Calls, News, etc.   
+        if recent_trascript: # checks to make sure earnings call results is returned then outputs them  
             st.subheader("🤖Ask Grok")
             st.write("Ask Grok about something related to the stock.")
             
