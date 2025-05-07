@@ -106,7 +106,7 @@ if sentiment_clicked:
         else:
             st.error(f"Couldn't generate wordcloud for '{stock_keyword}'.")
 
-        if stock_prediction and financial_results:
+        if stock_prediction is not None and financial_results is not None and not financial_results.empty:
             st.success("Here is the predicted analysis:")
             st.write(stock_prediction)
         else:
