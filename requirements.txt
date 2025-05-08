@@ -12,3 +12,4 @@ yfinance
 scikit-learn
 prophet
 plotly 
+nltk
