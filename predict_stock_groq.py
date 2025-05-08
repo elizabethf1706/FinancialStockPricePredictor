@@ -1,22 +1,34 @@
 import os
 from groq import Groq
 
-def predictStockPrice(GROQ_API_KEY, stock_keyword, financial_results,sentiment_analysis):
-    # Create the Groq client
+def predictStockPrice(GROQ_API_KEY, stock_keyword, financial_results, sentiment_analysis):
     client = Groq(api_key=GROQ_API_KEY)
+
     response = client.chat.completions.create(
         model="llama3-70b-8192",
-        messages=[{
-            "role": "user", 
-            "content": f"""
-            I am providing you with the following 6 month financial data for the stock {stock_keyword} and a sentiment analysis:
-            {financial_results} {sentiment_analysis}
+        messages=[
+            {
+                "role": "system",
+                "content": (
+                    "You are a financial forecasting assistant. "
+                    "Analyze stock data using time-series methods and sentiment analysis. "
+                    "Only provide a direct forecast and the reasoning behind it. "
+                    "Avoid general explanations or apologies."
+                )
+            },
+            {
+                "role": "user",
+                "content": f"""
+Here is 6-month financial data and sentiment analysis for {stock_keyword}:
+{financial_results}
+{sentiment_analysis}
 
-            Using this data, apply time series forecasting methods to predict the stock's closing price for tomorrow. Consider trends, sentiment, volatility, and historical movements in the stock's price. Explain the reasoning behind your prediction,highlighting key patterns, trends, or anomalies that influenced the forecast. 
-    Please do not apologize or provide general explanations. Focus solely on predicting the stock price for tomorrow.
-            """}],
+Based on this, predict tomorrow's closing price. Include reasoning using trends, anomalies, and volatility.
+                """
+            }
+        ],
         max_tokens=4000,
-        temperature=0.0  # Factual-based responses with minimal creativity
-    )   
+        temperature=0.0
+    )
 
     return response.choices[0].message.content
