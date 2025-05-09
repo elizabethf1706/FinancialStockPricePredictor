@@ -1,6 +1,9 @@
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 from newsapi import NewsApiClient
+from nltk.corpus import stopwords
+import nltk 
+nltk.download('stopwords')
 
 def get_wordcloud(api_key, stock_keyword):
     """Generates a word cloud from recent relevant news for a given stock.
@@ -14,6 +17,9 @@ def get_wordcloud(api_key, stock_keyword):
         None: If no articles or an error occurred.
     """
     newsapi = NewsApiClient(api_key=api_key)
+    stop_words = set(stopwords.words('english'))
+    stop_words.update(["stock", "stocks", "price", "company", "companies", "market", "news", "share", "shares", "value", "trading", "ticker"])
+    stop_words.update([stock_keyword.lower()])  # Add the stock keyword to stop words
 
     try:
         articles = newsapi.get_everything(
@@ -40,7 +46,7 @@ def get_wordcloud(api_key, stock_keyword):
         return None
 
     try:
-        wordcloud = WordCloud(width=1000, height=500, background_color='white').generate(combined_text)
+        wordcloud = WordCloud(width=1000, height=500, background_color='white', stopwords=stop_words, max_words=25).generate(combined_text)
         fig, ax = plt.subplots(figsize=(12, 6))
         ax.imshow(wordcloud, interpolation='bilinear')
         ax.axis("off")
