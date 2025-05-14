@@ -39,8 +39,10 @@ stock_keyword = st.text_input("Enter Stock Ticker or Company Name:", "TSLA")
 def define_collection(ticker: str):
     if len(ticker) < 3:
         ticker += "12"
-    return client.create_collection(f"{ticker}")
-stock_collection = define_collection(stock_keyword)
+    try:
+        return client.get_collection(f"{ticker}")
+    except ValueError as e:
+        return client.create_collection(f"{ticker}")
 
 if st.button("Analyze Sentiment"):
     if not stock_keyword:
@@ -48,8 +50,8 @@ if st.button("Analyze Sentiment"):
 
     else:
         st.write(f"Okay, looking for news about '{stock_keyword}'...")
-        
 
+        stock_collection = define_collection(stock_keyword)
 
         with st.spinner('Fetching and analyzing news...'): # spinning wheel while the analysis is happening
             analysis_results = get_sentiment_analysis(NEWS_API_KEY, stock_keyword)
