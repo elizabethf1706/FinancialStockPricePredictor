@@ -18,17 +18,9 @@ ALPHA_API_KEY = os.getenv('ALPHA_API_KEY')
 
 @st.cache_resource
 def start_db():
-    try:
-        client = chromadb.PersistentClient(path="./chroma")
-        collection = client.get_or_create_collection("database")
-        print("Connected to ChromaDB.")
-        return client, collection
+    return chromadb.PersistentClient(path="./chroma")
     
-    except Exception as e:
-        print(f"Error connecting to ChromaDB: {e}")
-        return None, None
-    
-client, collection = start_db()
+client = start_db()
 
 
 
@@ -43,20 +35,27 @@ Just type in a stock ticker or company name below.
 # text box where the user can type in the stock 
 stock_keyword = st.text_input("Enter Stock Ticker or Company Name:", "TSLA")
 
+@st.cache_resource
+def define_collection(ticker: str):
+    if len(ticker) < 3:
+        ticker += "12"
+    return client.create_collection(f"{ticker}")
+stock_collection = define_collection(stock_keyword)
+
 if st.button("Analyze Sentiment"):
     if not stock_keyword:
         st.warning("Please enter a stock keyword to analyze.")
 
     else:
         st.write(f"Okay, looking for news about '{stock_keyword}'...")
+        
 
-        # spinning wheel while the analysis is happening
-        with st.spinner('Fetching and analyzing news...'):
+
+        with st.spinner('Fetching and analyzing news...'): # spinning wheel while the analysis is happening
             analysis_results = get_sentiment_analysis(NEWS_API_KEY, stock_keyword)
             wordcloud_results = get_wordcloud(NEWS_API_KEY, stock_keyword)
             financial_results = get_StockSummary(ALPHA_API_KEY, stock_keyword) 
             stock_prediction = predictStockPrice(GROQ_API_KEY, stock_keyword, financial_results, analysis_results)
-
 
 
         if analysis_results: # if we got results back
@@ -90,7 +89,6 @@ if st.button("Analyze Sentiment"):
         else:
             st.error(f"Couldn't make wordcloud for '{stock_keyword}'. Maybe check the ticker or try again later?") 
         
-
         
         if stock_prediction and financial_results: # checks to make sure stocks results is returned then outputs them
             st.success("Here is the predicted analysis: ")
@@ -99,7 +97,7 @@ if st.button("Analyze Sentiment"):
             st.error(f"Couldn't make stock analysis for '{stock_keyword}'. Maybe check the ticker or try again later?") 
 
 
-        if collection:
+        if stock_collection:
             st.subheader("🤖Ask Grok")
             st.write("Ask Grok about something related to the stock.")
                 
@@ -107,11 +105,12 @@ if st.button("Analyze Sentiment"):
             
             with st.spinner('Grok is thinking...'):
                 # Query the collection
-                results = collection.query(
+                results = stock_collection.query(
                     query_texts=[user_input],
                     n_results=3
                 )
                 # Display the results
+                #TODO: put through ai so we see what Grok says about it.
                 st.write("Grok's response:")
                 for result in results['documents'][0]:
                     st.write(result)
