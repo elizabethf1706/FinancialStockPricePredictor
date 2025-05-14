@@ -10,18 +10,29 @@ from sentiment_visualizer import plot_sentiment_distribution
 from news_word_cloud import get_wordcloud
 from predict_stock_groq import predictStockPrice
 from financial_data import get_StockSummary
-from earnings_transcript import get_earnings_call_transcript
 
 load_dotenv()
 NEWS_API_KEY = os.getenv('NEWS_API_KEY')
 GROQ_API_KEY = os.getenv('GROQ_API_KEY')
 ALPHA_API_KEY = os.getenv('ALPHA_API_KEY')
-client = chromadb.PersistentClient()
-collection = client.get_or_create_collection("database")
-#TODO: might want to cosider using "st.cache_resource" so this doesn't run on every refresh
-#      also so it works between scripts
-print("Database & collection created")
 
+@st.cache_resource
+def start_db():
+    try:
+        client = chromadb.PersistentClient(path="./chroma")
+        collection = client.get_or_create_collection("database")
+        print("Connected to ChromaDB.")
+        return client, collection
+    
+    except Exception as e:
+        print(f"Error connecting to ChromaDB: {e}")
+        return None, None
+    
+client, collection = start_db()
+
+
+
+#START
 st.title("Stock News Sentiment Analyzer")
 
 st.write("""
@@ -45,10 +56,6 @@ if st.button("Analyze Sentiment"):
             wordcloud_results = get_wordcloud(NEWS_API_KEY, stock_keyword)
             financial_results = get_StockSummary(ALPHA_API_KEY, stock_keyword) 
             stock_prediction = predictStockPrice(GROQ_API_KEY, stock_keyword, financial_results, analysis_results)
-            recent_trascript = get_earnings_call_transcript(ALPHA_API_KEY, stock_keyword, "2024Q4")
-            #TODO: Find a way to get most recent quarter for earnings call
-            # quarter = "2024Q4" for now.
-
 
 
 
@@ -72,8 +79,7 @@ if st.button("Analyze Sentiment"):
                 negative_count=analysis_results['negative_count'],
                 neutral_count=analysis_results['neutral_count'],
                 stock_keyword=analysis_results['stock'],
-                st=st )
-            
+                st=st )  
         else:
             st.error(f"Couldn't get or analyze news for '{stock_keyword}'. Maybe check the ticker or try again later?") 
         
@@ -81,7 +87,6 @@ if st.button("Analyze Sentiment"):
         if wordcloud_results: # checks to make sure word cloud results is returned then outputs them
             st.success("Wordcloud complete!")
             st.pyplot(wordcloud_results) 
-
         else:
             st.error(f"Couldn't make wordcloud for '{stock_keyword}'. Maybe check the ticker or try again later?") 
         
@@ -94,9 +99,19 @@ if st.button("Analyze Sentiment"):
             st.error(f"Couldn't make stock analysis for '{stock_keyword}'. Maybe check the ticker or try again later?") 
 
 
-        if recent_trascript: # checks to make sure earnings call results is returned then outputs them  
+        if collection:
             st.subheader("🤖Ask Grok")
             st.write("Ask Grok about something related to the stock.")
+                
+            user_input = st.text_input("Ask Grok:", "What do the earnings calls say?")
             
-
-            user_input = st.text_input("Ask Grok:", "What is the sentiment of the news?")
+            with st.spinner('Grok is thinking...'):
+                # Query the collection
+                results = collection.query(
+                    query_texts=[user_input],
+                    n_results=3
+                )
+                # Display the results
+                st.write("Grok's response:")
+                for result in results['documents'][0]:
+                    st.write(result)
