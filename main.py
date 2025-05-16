@@ -43,7 +43,6 @@ def get_top_headlines(stock_keyword):
             st.write(f"{i}. {article['title']}")
             st.write(f"   Source: {article['source']['name']}")
             st.write(f"   Published: {article['publishedAt']}")
-            st.write(f"   URL: {article['url']}\n")
     else:
         st.error("Error fetching headlines:", headlines.get("message"))
 
