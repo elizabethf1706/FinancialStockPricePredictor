@@ -11,13 +11,20 @@ import requests
 Add a ticker's most recent earnings call transcript to the ChromaDB collection, if not already in it.
 '''
 def add_ticker_to_chroma(ticker: str) -> None:
+    
+    try:
+        stock_collection = client.get_collection(f"{ticker}")
+    except ValueError as e:
+        stock_collection = client.create_collection(f"{ticker}")
+
+    
     transcript_dict: dict = {}
     year = 2025
     quarter = 4
 
     potential_id = f"{ticker}_0"
     
-    if potential_id in collection.get(ids=[potential_id])["ids"]:
+    if potential_id in stock_collection.get(ids=[potential_id])["ids"]:
         print(f"{ticker} earnings call already exists in ChromaDB.")
         return None
     
@@ -64,7 +71,7 @@ def add_ticker_to_chroma(ticker: str) -> None:
         metadatas.append({"speaker": speaker, "title": speaker_title, "sentiment": sentiment})
         ids.append(f"{ticker}_{i}")
 
-    collection.add(
+    stock_collection.add(
         documents=documents,
         metadatas=metadatas,
         ids=ids

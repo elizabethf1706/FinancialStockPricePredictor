@@ -133,20 +133,22 @@ if sentiment_clicked:
         else:
             st.error(f"Couldn't create stock analysis for '{stock_keyword}'.")
         
-
+# FULL WIDTH: EARNINGS CALLS
 if CLIENT:
     st.subheader(f"💬 Ask Groq")
-    stock = st.text_input("Ask Groq about the most recent earnings calls", placeholder="TSLA")
-    user_question = st.text_input("Your question: ", placeholder="What are the latest developments?")
+    stock = st.text_input("Ask Groq about the most recent earnings calls", "TSLA")
+    user_question = st.text_input("Your question: ", "What are the latest developments?")
     
     if st.button("Ask"):
-        stock_collection = CLIENT.get_collection(f"{stock_keyword}")
+        stock_collection = CLIENT.get_collection(f"{stock}")
+        print("Got collection")
         with st.spinner("Asking Groq..."):
             db_query = stock_collection.query(
                 query_texts=[user_question],
-                n_results=6
+                n_results=10
             )
+            print("Got query results")
 
-            groq_analysis = advise_earnings_from_query(GROQ_API_KEY, stock_keyword, db_query, user_question)
+            groq_analysis = advise_earnings_from_query(GROQ_API_KEY, stock, db_query, user_question)
 
             st.write(groq_analysis)
