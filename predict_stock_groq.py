@@ -13,8 +13,7 @@ def predictStockPrice(GROQ_API_KEY,selected_option, stock_keyword, financial_res
             "content": f"""
             I am providing you with the following 6 month financial data for the stock {stock_keyword} and a sentiment analysis:
             {financial_results} {get_sentiment_analysis}
-            Using this data, apply time series forecasting methods to predict the stock's closing price for tomorrow. Consider trends, sentiment, volatility, and historical movements in the stock's price. Explain the reasoning behind your prediction,highlighting key patterns, trends, or anomalies that influenced the forecast.
-    Please do not apologize or provide general explanations. Focus solely on predicting the stock price for tomorrow.
+            Using this data, apply time series forecasting methods to predict the stock's closing price for tomorrow. Consider trends, sentiment, volatility, and historical movements in the stock's price. Return only a number.
             """}],
         max_tokens=4000,
         temperature=0.0  # Factual-based responses with minimal creativity
