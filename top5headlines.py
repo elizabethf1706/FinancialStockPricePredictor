@@ -36,6 +36,6 @@ def get_top_headlines(api_key, stock_keyword):
             print(f"{i}. {article['title']}")
             print(f"   Source: {article['source']['name']}")
             print(f"   Published: {article['publishedAt']}")
-            print(f"   URL: {article['url']}\n")
+  
     else:
         print("Error fetching headlines:", headlines.get("message"))
