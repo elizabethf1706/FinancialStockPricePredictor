@@ -8,4 +8,8 @@ wordcloud
 groq
 alpha_vantage>=2.3.1
 pandas
-chromadb
+yfinance
+scikit-learn
+prophet
+plotly 
+nltk
