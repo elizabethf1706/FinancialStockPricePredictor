@@ -1,5 +1,6 @@
 import chromadb
 import requests
+import os
 
 
 #7OOYZDM6H53OW8L8 : 1st
@@ -10,25 +11,19 @@ import requests
 '''
 Add a ticker's most recent earnings call transcript to the ChromaDB collection, if not already in it.
 '''
-def add_ticker_to_chroma(ticker: str) -> None:
-    
-    try:
-        stock_collection = client.get_collection(f"{ticker}")
-    except ValueError as e:
-        stock_collection = client.create_collection(f"{ticker}")
+def add_ticker_to_chroma(ticker: str, ticker_db: str, client) -> None:
+    collections_names = [collection.name for collection in client.list_collections()]
 
-    
+    if ticker_db in collections_names:
+        print(f"[{os.path.basename(__file__)}]  {ticker_db} already exists in the database.")
+        return None
+    else:
+        stock_collection = client.create_collection(f"{ticker_db}")
+        print(f"[{os.path.basename(__file__)}]  {ticker_db} was not in the database. A {ticker_db} collection was created.")
+
     transcript_dict: dict = {}
     year = 2025
     quarter = 4
-
-    potential_id = f"{ticker}_0"
-    
-    if potential_id in stock_collection.get(ids=[potential_id])["ids"]:
-        print(f"{ticker} earnings call already exists in ChromaDB.")
-        return None
-    
-
 
     while len(transcript_dict) == 0 and transcript_dict is not None:
 
@@ -36,7 +31,7 @@ def add_ticker_to_chroma(ticker: str) -> None:
         response = requests.get(query_url)
 
         if response.status_code != 200:
-            print(f"Failed to retrieve transcript for {ticker}. Status code: {response.status_code}")
+            print(f"[{os.path.basename(__file__)}]  Failed to retrieve transcript for {ticker}. Status code: {response.status_code}")
 
         else:
             data: dict = response.json()
@@ -50,11 +45,11 @@ def add_ticker_to_chroma(ticker: str) -> None:
                         year -= 1
 
                     if year == 2024 and quarter < 3:
-                        print(f"No transcript found for {ticker} in any recent quarter.")
+                        print(f"[{os.path.basename(__file__)}]  No transcript found for {ticker} in any recent quarter.")
                         return None
             
             except Exception as e:
-                print(f"No transcript found for {ticker}. Probably API rate limit exceeded.")
+                print(f"[{os.path.basename(__file__)}]  No transcript found for {ticker}. Probably API rate limit exceeded.")
                 return None
     
     documents = []
@@ -76,13 +71,13 @@ def add_ticker_to_chroma(ticker: str) -> None:
         metadatas=metadatas,
         ids=ids
     )
-    print(f"Added {len(documents)} entries to ChromaDB for {ticker} in quarter {year}Q{quarter}.")
+    print(f"[{os.path.basename(__file__)}]  Added {len(documents)} entries to ChromaDB for {ticker} in quarter {year}Q{quarter}.")
 
     return None
             
 
     
-if __name__ == "__main__":
+if os.path.basename(__file__) == "__main__":
     client = chromadb.PersistentClient()
     
     stock_collection = client.get_collection("TSLA")
