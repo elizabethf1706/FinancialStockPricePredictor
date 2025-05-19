@@ -154,10 +154,11 @@ if CLIENT:
     user_question = st.text_input("Your question: ", "What are the latest developments?")
     
     if st.button("Ask"):
-        add_ticker_to_chroma(stock, stock_db, CLIENT)
-        stock_collection = CLIENT.get_collection(f"{stock_db}")
-        print(f"[{os.path.basename(__file__)}]  Got collection")
         with st.spinner("Asking Groq..."):
+            add_ticker_to_chroma(stock, stock_db, CLIENT)
+            stock_collection = CLIENT.get_collection(f"{stock_db}")
+            print(f"[{os.path.basename(__file__)}]  Got collection")
+            
             db_query = stock_collection.query(
                 query_texts=[user_question],
                 n_results=10
