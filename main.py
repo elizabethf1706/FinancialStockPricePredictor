@@ -99,6 +99,8 @@ if sentiment_clicked:
             wordcloud_results = get_wordcloud(NEWS_API_KEY, stock_keyword)
             financial_results = get_5_month_stock_data(stock_keyword) 
             stock_prediction = predictStockPrice(GROQ_API_KEY, stock_keyword, financial_results, analysis_results)
+            financial_results = get_5_month_stock_data(stock_keyword) 
+            stock_prediction = predictStockPrice(GROQ_API_KEY, stock_keyword, financial_results, analysis_results)
 
         if analysis_results:
             st.success("Sentiment Analysis complete!")
@@ -121,10 +123,17 @@ if sentiment_clicked:
         else:
             st.error(f"Couldn't analyze news for '{stock_keyword}'.")
 
+            st.error(f"Couldn't analyze news for '{stock_keyword}'.")
+
         if wordcloud_results:
             st.success("Wordcloud complete!")
             st.pyplot(wordcloud_results) 
         else:
+            st.error(f"Couldn't generate wordcloud for '{stock_keyword}'.")
+
+        if stock_prediction is not None and financial_results is not None and not financial_results.empty:
+            st.success("Here is the predicted analysis:")
+            st.write(stock_prediction)
             st.error(f"Couldn't generate wordcloud for '{stock_keyword}'.")
 
         if stock_prediction is not None and financial_results is not None and not financial_results.empty:

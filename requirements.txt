@@ -12,4 +12,8 @@ yfinance
 scikit-learn
 prophet
 plotly 
+<<<<<<< HEAD
 nltk
+=======
+nltk
+>>>>>>> origin/main
