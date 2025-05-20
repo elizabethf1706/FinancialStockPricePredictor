@@ -11,12 +11,9 @@ from datetime import datetime, timedelta
 from newsapi import NewsApiClient
 from financial_plotter import plot_historical_price_with_volume, plot_candlestick_chart, plot_price_with_moving_averages
 
-# NEWS_API_KEY = st.secrets["NEWS_API_KEY"]
-# GROQ_API_KEY = st.secrets["GROQ_API_KEY"]
-# ALPHA_API_KEY = st.secrets["ALPHA_API_KEY"]
-NEWS_API_KEY='5a209c06298e4a60a4ea32789d08bbc7'
-GROQ_API_KEY='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'
-ALPHA_API_KEY='KHR0IMG7PZF7OHFK'
+NEWS_API_KEY = st.secrets["NEWS_API_KEY"]
+GROQ_API_KEY = st.secrets["GROQ_API_KEY"]
+ALPHA_API_KEY = st.secrets["ALPHA_API_KEY"]
 
 
 # Initialize NewsApiClient
