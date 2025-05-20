@@ -8,14 +8,14 @@ st.header("🔗 View the Full Paper Online")
 st.write("""
 You can access our research paper directly via the following link:
 """)
-st.markdown("[**Click here to view the paper**](https://docs.google.com/document/d/144SSsXkz2eH5UTeEqTs1iV6tnWswcXmaWkhgZ8LZ9ns/edit?tab=t.0#heading=h.ml696l5c1og)", unsafe_allow_html=True)
+st.markdown("[**Click here to view the paper**](https://docs.google.com/document/d/e/2PACX-1vRVf58-LPlKMAQZW1FkBP9KRcauFAKUjPzU5Tc2UJYvl6GIlA1EOSK9YvrC06Isc2TeCrgo6ygxDJhL/pub)", unsafe_allow_html=True)
 
-# Section 2: Embed the Google Doc (Embedded PDF Preview)
+# Section 2: Embed the Google Doc (Embedded Preview)
 st.header("📑 Embedded Research Paper")
 st.write("You can also read the paper right here:")
 
 # Embed the document using the published URL
 iframe_code = """
-<iframe src="https://docs.google.com/document/d/144SSsXkz2eH5UTeEqTs1iV6tnWswcXmaWkhgZ8LZ9ns/pub" width="100%" height="800px"></iframe>
+<iframe src="https://docs.google.com/document/d/e/2PACX-1vRVf58-LPlKMAQZW1FkBP9KRcauFAKUjPzU5Tc2UJYvl6GIlA1EOSK9YvrC06Isc2TeCrgo6ygxDJhL/pub" width="100%" height="800px"></iframe>
 """
 st.markdown(iframe_code, unsafe_allow_html=True)
