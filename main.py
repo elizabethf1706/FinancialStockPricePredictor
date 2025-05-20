@@ -1,8 +1,4 @@
-import streamlit as st 
- 
-
-load_dotenv()  # Loads variables from a .env file into environment
-          
+import streamlit as st           
 from sentiment_analyzer import get_sentiment_analysis   
 from sentiment_visualizer import plot_sentiment_distribution 
 from news_word_cloud import get_wordcloud
