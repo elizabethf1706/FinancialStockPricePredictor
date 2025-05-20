@@ -8,7 +8,7 @@ def advise_earnings_from_query(GROQ_API_KEY, stock_keyword, query_results, user_
     content = ""
     
     for passage in range(len(documents)):
-        entry = f"{speaker_title[passage]["speaker"]} ({speaker_title[passage]["title"]}): \n {documents[passage]} \n\n"
+        entry = f"{speaker_title[passage]['speaker']} ({speaker_title[passage]['title']}): \n {documents[passage]} \n\n"
         content += entry
     
     response = client.chat.completions.create(
