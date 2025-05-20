@@ -5,7 +5,7 @@ except Exception as e:
         print("Couldn't import stuff for chromadb")
 import os
 from advise_earnings import advise_earnings_from_query
-from pages.chroma import add_ticker_to_chroma
+from chroma import add_ticker_to_chroma
 
 
 @st.cache_resource
