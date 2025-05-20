@@ -7,7 +7,7 @@ import os
 from advise_earnings import advise_earnings_from_query
 from chroma import add_ticker_to_chroma
 
-GROQ_API_KEY='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'
+GROQ_API_KEY=st.secrets["GROQ_API_KEY"]
 
 
 @st.cache_resource
