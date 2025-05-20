@@ -1,5 +1,8 @@
 import streamlit as st 
-import os              
+ 
+
+load_dotenv()  # Loads variables from a .env file into environment
+          
 from sentiment_analyzer import get_sentiment_analysis   
 from sentiment_visualizer import plot_sentiment_distribution 
 from news_word_cloud import get_wordcloud
@@ -11,12 +14,9 @@ from datetime import datetime, timedelta
 from newsapi import NewsApiClient
 from financial_plotter import plot_historical_price_with_volume, plot_candlestick_chart, plot_price_with_moving_averages
 
-
-# Load API keys from Streamlit secrets
 NEWS_API_KEY = st.secrets["NEWS_API_KEY"]
 GROQ_API_KEY = st.secrets["GROQ_API_KEY"]
 ALPHA_API_KEY = st.secrets["ALPHA_API_KEY"]
-
 # Initialize NewsApiClient
 newsapi = NewsApiClient(api_key=NEWS_API_KEY)
 
