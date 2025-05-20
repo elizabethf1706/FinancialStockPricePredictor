@@ -8,6 +8,7 @@ wordcloud
 groq
 alpha_vantage>=2.3.1
 pandas
+pysqlite3-binary
 yfinance
 scikit-learn
 prophet
