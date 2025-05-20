@@ -10,12 +10,12 @@ You can access our research paper directly via the following link:
 """)
 st.markdown("[**Click here to view the paper**](https://docs.google.com/document/d/e/2PACX-1vRVf58-LPlKMAQZW1FkBP9KRcauFAKUjPzU5Tc2UJYvl6GIlA1EOSK9YvrC06Isc2TeCrgo6ygxDJhL/pub)", unsafe_allow_html=True)
 
-# Section 2: Embed the Google Doc (Embedded Preview)
+# Section 2: Embedded Google Doc
 st.header("📑 Embedded Research Paper")
 st.write("You can also read the paper right here:")
 
-# Embed the document using the published URL
+# Embed the Google Doc using the published URL with embedded=true
 iframe_code = """
-<iframe src="https://docs.google.com/document/d/e/2PACX-1vRVf58-LPlKMAQZW1FkBP9KRcauFAKUjPzU5Tc2UJYvl6GIlA1EOSK9YvrC06Isc2TeCrgo6ygxDJhL/pub" width="100%" height="800px"></iframe>
+<iframe src="https://docs.google.com/document/d/e/2PACX-1vRVf58-LPlKMAQZW1FkBP9KRcauFAKUjPzU5Tc2UJYvl6GIlA1EOSK9YvrC06Isc2TeCrgo6ygxDJhL/pub?embedded=true" width="100%" height="800px" style="border: none;"></iframe>
 """
 st.markdown(iframe_code, unsafe_allow_html=True)
