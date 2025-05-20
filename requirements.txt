@@ -13,4 +13,5 @@ scikit-learn
 prophet
 plotly 
 nltk
+
 chromadb
