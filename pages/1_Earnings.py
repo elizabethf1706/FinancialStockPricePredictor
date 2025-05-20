@@ -28,8 +28,8 @@ user_question = st.text_input("Your question: ", "What are the latest developmen
     
 
 if st.button("Ask"):
-    with st.spinner("Asking Groq..."):
-        if CLIENT:
+    if CLIENT:
+        with st.spinner("Asking Groq..."):
             add_ticker_to_chroma(stock, stock_db, CLIENT)
             stock_collection = CLIENT.get_collection(f"{stock_db}")
             print(f"[{os.path.basename(__file__)}]  Got collection")
@@ -41,5 +41,5 @@ if st.button("Ask"):
             print(f"[{os.path.basename(__file__)}]  Got query results")
             groq_analysis = advise_earnings_from_query(st.secrets["GROQ_API_KEY"], stock, db_query, user_question)
             st.write(groq_analysis)
-        else:
-            st.error("Couldn't get the database intialized!")
+    else:
+        st.error("Couldn't get the database intialized!")
