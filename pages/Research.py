@@ -1,5 +1,4 @@
 import streamlit as st
-import base64
 
 st.set_page_config(page_title="Research Paper", layout="wide")
 st.title("📄 Our Research Paper")
@@ -15,9 +14,6 @@ st.markdown("[**Click here to view the paper**](https://docs.google.com/document
 st.header("📑 Embedded PDF Preview")
 st.write("You can also read the paper right here:")
 
-# Show PDF (must be in the project folder or public URL)
-with open("pdfs/your_paper.pdf", "rb") as f:
-    base64_pdf = base64.b64encode(f.read()).decode('utf-8')
-
-pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="100%" height="800px" type="application/pdf"></iframe>'
-st.markdown(pdf_display, unsafe_allow_html=True)
+# Provide the link to the publicly hosted PDF
+pdf_url = "https://your-public-link.com/your_paper.pdf"
+st.markdown(f'<iframe src="{pdf_url}" width="100%" height="800px" type="application/pdf"></iframe>', unsafe_allow_html=True)
