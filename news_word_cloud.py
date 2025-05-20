@@ -37,7 +37,7 @@ def get_wordcloud(api_key, stock_keyword):
             q=stock_keyword,
             language='en',
             sort_by='relevancy',
-            page_size=100  # Max allowed
+            page_size=5  # Max allowed
         )
     except Exception as e:
         print(f"Error fetching articles: {e}")
