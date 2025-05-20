@@ -3,32 +3,27 @@ import streamlit as st
 from chromadb import Client
 from chromadb.config import Settings
 
-# Initialize Chroma client using DuckDB (instead of SQLite)
 def get_chroma_client():
     return Client(Settings(
         chroma_db_impl="duckdb",
-        persist_directory=".chroma",  # can be in-repo for Streamlit Cloud
+        persist_directory=".chroma",
         anonymized_telemetry=False
     ))
 
-'''
-Add a ticker's most recent earnings call transcript to the ChromaDB collection, if not already in it.
-'''
 def add_ticker_to_chroma(ticker: str, ticker_db: str, client) -> None:
     collections_names = [collection.name for collection in client.list_collections()]
 
     if ticker_db in collections_names:
-        print(f"[add_ticker_to_chroma]  {ticker_db} already exists in the database.")
-        return None
+        st.info(f"📂 Collection `{ticker_db}` already exists in ChromaDB.")
+        return
     else:
         stock_collection = client.create_collection(f"{ticker_db}")
-        print(f"[add_ticker_to_chroma]  {ticker_db} was not in the database. A {ticker_db} collection was created.")
+        st.success(f"✅ Created new collection `{ticker_db}` in ChromaDB.")
 
     transcript_dict: dict = {}
     year = 2025
     quarter = 4
 
-    # Use Streamlit secret for the API key
     alpha_key = st.secrets["ALPHA_VANTAGE_API_KEY"]
 
     while len(transcript_dict) == 0 and transcript_dict is not None:
@@ -36,35 +31,35 @@ def add_ticker_to_chroma(ticker: str, ticker_db: str, client) -> None:
         response = requests.get(query_url)
 
         if response.status_code != 200:
-            print(f"[add_ticker_to_chroma]  Failed to retrieve transcript for {ticker}. Status code: {response.status_code}")
+            st.error(f"❌ Failed to retrieve transcript for {ticker}. Status code: {response.status_code}")
         else:
-            data: dict = response.json()
+            data = response.json()
             try:
-                transcript_dict: dict = data["transcript"]
+                transcript_dict = data["transcript"]
+
                 if len(transcript_dict) == 0:
                     quarter -= 1
                     if quarter == 0:
                         quarter = 4
                         year -= 1
                     if year == 2024 and quarter < 3:
-                        print(f"[add_ticker_to_chroma]  No transcript found for {ticker} in any recent quarter.")
-                        return None
-            except Exception as e:
-                print(f"[add_ticker_to_chroma]  No transcript found for {ticker}. Probably API rate limit exceeded.")
-                return None
+                        st.warning(f"⚠️ No recent transcript found for {ticker}.")
+                        return
+            except Exception:
+                st.warning(f"⚠️ API limit hit or no transcript for {ticker}.")
+                return
     
     documents = []
     metadatas = []
     ids = []
 
     for i, entry in enumerate(transcript_dict):
-        speaker: str = entry["speaker"]
-        speaker_title: str = entry["title"]
-        content: str = entry["content"]
-        sentiment: str = entry["sentiment"]
-
-        documents.append(content)
-        metadatas.append({"speaker": speaker, "title": speaker_title, "sentiment": sentiment})
+        documents.append(entry["content"])
+        metadatas.append({
+            "speaker": entry["speaker"],
+            "title": entry["title"],
+            "sentiment": entry["sentiment"]
+        })
         ids.append(f"{ticker}_{i}")
 
     stock_collection.add(
@@ -72,9 +67,6 @@ def add_ticker_to_chroma(ticker: str, ticker_db: str, client) -> None:
         metadatas=metadatas,
         ids=ids
     )
-
-    # Persist the database so it's saved in .chroma
     client.persist()
 
-    print(f"[add_ticker_to_chroma]  Added {len(documents)} entries to ChromaDB for {ticker} in quarter {year}Q{quarter}.")
-    return None
+    st.success(f"📈 Added {len(documents)} entries for {ticker} (Q{quarter} {year}) to ChromaDB.")
