@@ -9,6 +9,8 @@ from stock_predictor import get_5_month_stock_data, get_stock_data, get_tomorrow
 import plotly.graph_objects as go
 from datetime import datetime, timedelta
 from newsapi import NewsApiClient
+from financial_plotter import plot_historical_price_with_volume, plot_candlestick_chart, plot_price_with_moving_averages
+
 
 # Load API keys from Streamlit secrets
 NEWS_API_KEY = st.secrets["NEWS_API_KEY"]
@@ -100,41 +102,49 @@ if continue_clicked:
     if wordcloud_results:
         st.success("Wordcloud complete!")
         st.pyplot(wordcloud_results) 
-    else:
-        st.error(f"Couldn't generate wordcloud for '{stock_keyword}'.")
+        with st.spinner(f"Fetching and forecasting stock prices for {stock_keyword}..."):
+            raw_data = get_stock_data(stock_keyword)
+            prophet_ready = prepare_data_for_prophet(raw_data)
+            model, forecast = train_prophet_model(prophet_ready)
+            predicted_price = get_tomorrow_forecast(forecast)
 
-    if stock_prediction is not None and financial_results is not None and not financial_results.empty:
-        st.success("Here is the predicted analysis:")
-        st.write(stock_prediction)
-    elif selected_option != 'Machine Learning Model':
-        st.error(f"Couldn't create stock analysis for '{stock_keyword}'.")
+        if predicted_price is not None:
+            st.metric("📈 Predicted Closing Price (Tomorrow)", f"${predicted_price:.2f}")
 
-    if selected_option == 'Machine Learning Model':
-        st.write("## 📈 Forecast Results")
-        if not stock_keyword:
-            st.warning("Please enter a stock ticker to forecast.")
-        else:
-            with st.spinner(f"Fetching and forecasting stock prices for {stock_keyword}..."):
-                raw_data = get_stock_data(stock_keyword)
-                prophet_ready = prepare_data_for_prophet(raw_data)
-                model, forecast = train_prophet_model(prophet_ready)
-                predicted_price = get_tomorrow_forecast(forecast)
+        if forecast is not None and raw_data is not None and not raw_data.empty:
+            st.success(f"Forecast and data analysis complete for {stock_keyword}!")
 
-            if predicted_price is not None:
-                st.metric("📈 Predicted Closing Price (Tomorrow)", f"${predicted_price:.2f}")
+            tab1, tab2, tab3, tab4 = st.tabs(["Forecast Plot", "Historical Price & Volume", "Candlestick Chart", "Price & Moving Averages"])
 
-            if forecast is not None:
-                st.success(f"Forecast complete for {stock_keyword}!")
-
-                fig = go.Figure()
-                fig.add_trace(go.Scatter(x=forecast['ds'], y=forecast['yhat'], name='Forecast'))
-                fig.add_trace(go.Scatter(x=forecast['ds'], y=forecast['yhat_upper'], name='Upper Bound', line=dict(dash='dot')))
-                fig.add_trace(go.Scatter(x=forecast['ds'], y=forecast['yhat_lower'], name='Lower Bound', line=dict(dash='dot')))
-                st.plotly_chart(fig, use_container_width=True)
+            with tab1:
+                st.subheader("Price Forecast")
+                fig_forecast = go.Figure()
+                fig_forecast.add_trace(go.Scatter(x=forecast['ds'], y=forecast['yhat'], name='Forecast'))
+                fig_forecast.add_trace(go.Scatter(x=forecast['ds'], y=forecast['yhat_upper'], name='Upper Bound', line=dict(dash='dot')))
+                fig_forecast.add_trace(go.Scatter(x=forecast['ds'], y=forecast['yhat_lower'], name='Lower Bound', line=dict(dash='dot')))
+                st.plotly_chart(fig_forecast, use_container_width=True)
 
                 if prophet_ready is not None:
                     metrics = evaluate_model(model, forecast, prophet_ready)
                     st.write("Model Evaluation Metrics:")
                     st.json(metrics)
-            else:
-                st.error(f"Forecasting failed for {stock_keyword}.")
+            
+            with tab2:
+                st.subheader("Historical Price and Volume")
+                fig_hist_volume = plot_historical_price_with_volume(raw_data, stock_keyword)
+                st.plotly_chart(fig_hist_volume, use_container_width=True)
+
+            with tab3:
+                st.subheader("Candlestick Chart")
+                fig_candlestick = plot_candlestick_chart(raw_data, stock_keyword)
+                st.plotly_chart(fig_candlestick, use_container_width=True)
+
+            with tab4:
+                st.subheader("Price and Moving Averages")
+                fig_ma = plot_price_with_moving_averages(raw_data, stock_keyword)
+                st.plotly_chart(fig_ma, use_container_width=True)
+
+        elif forecast is None:
+            st.error(f"Forecasting failed for {stock_keyword}.")
+        elif raw_data is None or raw_data.empty:
+            st.error(f"Could not retrieve historical data for {stock_keyword} to display charts.")
