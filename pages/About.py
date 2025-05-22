@@ -6,14 +6,16 @@ st.title("About Me")
 col1, col2 = st.columns(2)
 
 with col1:
-    st.header("Purpose of this Web App")
+    st.header("Our Purpose")
     st.write("""
-    Our application serves as a tool for stock market traders and financial analysts.
+    This application serves as a tool for stock market traders and financial analysts.\n
+    It guides market professionals in making more informed decisions when investing, buying, and selling.\n
+    Our team built this web app in just 6 weeks, and we are excited to continue improving it!
     """)
 with col2: 
     st.header("What we Offer")
     st.write("""
-    1. AI-enhanced and machine learning forecasting models\n
+    1. AI and machine learning forecasting models\n
     2. Current news headliners\n
     3. Sentiment analysis\n
     4. Generated wordcloud\n
