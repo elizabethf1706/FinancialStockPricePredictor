@@ -4,11 +4,11 @@ import streamlit as st
 st.title("About Me")
 
 # Section 1: Purpose of Website
-st.header("Purpose of this Website")
+st.header("Purpose of this Web App")
 st.write("""
-This website was created to showcase our team's project and to provide 
-information about the features and goals of the application. We aim to deliver 
-an engaging and user-friendly experience for all visitors.
+Our application serves as a tool for stock market traders and financial analysts. We offer AI-enhanced and 
+machine learning forecasting models, relevant news headliners, sentiment analysis, applicable charts, generated wordcloud, 
+and an earnings insight AI-powered chatbot. Visit the "main" page to get started!
 """)
 
 st.header("Meet the Team")
