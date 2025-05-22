@@ -18,7 +18,7 @@ team = [
     {"name": "Elizabeth Flynn", "role": "Project Lead", "image": "images/Elizabeth.png"},
     {"name": "Kevin Gerges", "role": "Backend", "image": "images/Kevin.png"},
     {"name": "Stephanie Manalo", "role": "Designer", "image": "images/Stephanie.png"},
-    {"name": "Christopher Osgood", "role": "Designer", "image": "images/Christopher.png"},
+    {"name": "Christopher Osgood", "role": "Designer", "image": "images/Christopher.jpg"},
     {"name": "Kleber Ordonez", "role": "Designer", "image": "images/Kleber.png"},
     {"name": "Jasper Garcia", "role": "Designer", "image": "images/Jasper.png"},
 ]
