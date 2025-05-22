@@ -3,21 +3,23 @@ import streamlit as st
 
 st.title("About Me")
 
-# Section 1: Purpose of Website
-st.header("Purpose of this Web Application")
-st.write("""
-Our application serves as a tool for stock market traders and financial analysts.
-""")
-st.subheader("What we Offer")
-st.write("""
-1. AI-enhanced and machine learning forecasting models\n
-2. Current news headliners\n
-3. Sentiment analysis\n
-4. Generated wordcloud\n
-5. Applicable charts\n
-6. AI-powered earnings insights
-""")
+col1, col2 = st.columns(2)
 
+with col1:
+    st.header("Purpose of this Web App")
+    st.write("""
+    Our application serves as a tool for stock market traders and financial analysts.
+    """)
+with col2: 
+    st.header("What we Offer")
+    st.write("""
+    1. AI-enhanced and machine learning forecasting models\n
+    2. Current news headliners\n
+    3. Sentiment analysis\n
+    4. Generated wordcloud\n
+    5. Applicable charts\n
+    6. AI-powered earnings insights
+    """)
 
 st.header("Meet the Team")
 
