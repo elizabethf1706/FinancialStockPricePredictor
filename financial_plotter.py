@@ -1,7 +1,6 @@
 import plotly.graph_objects as go
 import pandas as pd
 
-# helper function to prepare data for plotting
 def _prepare_plotting_data(stock_data_raw):
     if stock_data_raw is None or stock_data_raw.empty:
         return None
@@ -94,7 +93,15 @@ def plot_historical_price_with_volume(stock_data_raw, ticker_symbol):
             showgrid=False
         ),
         legend=dict(x=0.01, y=0.99, bordercolor='black', borderwidth=1),
-        xaxis_rangeslider_visible=False
+        xaxis_rangeslider_visible=False,
+        xaxis=dict(
+            tickformat='%Y-%m-%d',
+            tickangle=-45,
+            showgrid=True,
+            gridwidth=1,
+            gridcolor='lightgray',
+            nticks=10
+        )
     )
     return fig 
 
@@ -126,7 +133,15 @@ def plot_candlestick_chart(stock_data_raw, ticker_symbol):
         title_text=f'{ticker_symbol} - Candlestick Chart',
         xaxis_title='Date',
         yaxis_title='Price (USD)',
-        xaxis_rangeslider_visible=False
+        xaxis_rangeslider_visible=False,
+        xaxis=dict(
+            tickformat='%Y-%m-%d',
+            tickangle=-45,
+            showgrid=True,
+            gridwidth=1,
+            gridcolor='lightgray',
+            nticks=10
+        )
     )
     return fig 
 
@@ -172,6 +187,14 @@ def plot_price_with_moving_averages(stock_data_raw, ticker_symbol, short_window=
         xaxis_title='Date',
         yaxis_title='Price (USD)',
         legend=dict(x=0.01, y=0.99, bordercolor='black', borderwidth=1),
-        xaxis_rangeslider_visible=True
+        xaxis_rangeslider_visible=True,
+        xaxis=dict(
+            tickformat='%Y-%m-%d',
+            tickangle=-45,
+            showgrid=True,
+            gridwidth=1,
+            gridcolor='lightgray',
+            nticks=10
+        )
     )
     return fig
