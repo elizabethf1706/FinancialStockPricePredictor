@@ -1,34 +1,14 @@
 import os
 import requests
-import streamlit as st
-from dotenv import load_dotenv
 
-# Uncomment and configure ChromaDB client
-import chromadb
-from chromadb.config import Settings
 
-load_dotenv()
-
-# --- Setup ChromaDB client ---
-chroma_client = chromadb.Client(Settings())
-
-# --- Streamlit UI ---
-st.set_page_config(page_title="ChromaDB Ticker Importer", layout="centered")
-st.title("📊 Add Ticker's Earnings Transcript to ChromaDB")
-
-ticker = st.text_input("Enter Stock Ticker (e.g., AAPL)", value="")
-submit = st.button("Add Transcript to ChromaDB")
-
-# --- Main Function ---
 def add_ticker_to_chroma(ticker: str, ticker_db: str, client) -> str:
     collections_names = [collection.name for collection in client.list_collections()]
-    status_messages = []
 
     if ticker_db in collections_names:
         return f"✅ `{ticker_db}` already exists in the database."
 
     stock_collection = client.create_collection(f"{ticker_db}")
-    status_messages.append(f"🆕 `{ticker_db}` collection created.")
 
     transcript_dict: dict = {}
     year = 2025
@@ -77,13 +57,3 @@ def add_ticker_to_chroma(ticker: str, ticker_db: str, client) -> str:
     )
 
     return f"✅ Added {len(documents)} entries to `{ticker_db}` for {year}Q{quarter}."
-
-
-# --- Trigger Logic ---
-if submit:
-    if ticker:
-        ticker_db = f"{ticker}_transcript"
-        result = add_ticker_to_chroma(ticker.upper(), ticker_db, chroma_client)
-        st.success(result) if result.startswith("✅") else st.warning(result)
-    else:
-        st.error("Please enter a valid stock ticker.")

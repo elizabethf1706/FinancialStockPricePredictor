@@ -10,13 +10,13 @@ from chroma import add_ticker_to_chroma
 
 @st.cache_resource
 def initialize_chromadb():
-    return chromadb.PersistentClient(path="./chroma")
+    try:
+        return chromadb.Client(path="./chroma")
+    except Exception as e:
+        print(f"Error initializing ChromaDB client: {e}")
+        return None
 
-try:
-    CLIENT = initialize_chromadb()
-except Exception as e:
-    print(e)
-    CLIENT = None
+CLIENT = initialize_chromadb()
 
 st.subheader("💬 Ask Groq")
 stock = st.text_input("Ask Groq about the most recent earnings calls", "TSLA")
@@ -28,18 +28,18 @@ user_question = st.text_input("Your question: ", "What are the latest developmen
     
 
 if st.button("Ask"):
-    if CLIENT:
-        with st.spinner("Asking Groq..."):
+    with st.spinner("Asking Groq..."):
+        if CLIENT:
             add_ticker_to_chroma(stock, stock_db, CLIENT)
             stock_collection = CLIENT.get_collection(f"{stock_db}")
             print(f"[{os.path.basename(__file__)}]  Got collection")
             
             db_query = stock_collection.query(
                 query_texts=[user_question],
-                n_results=10
+                n_results=5
             )
             print(f"[{os.path.basename(__file__)}]  Got query results")
             groq_analysis = advise_earnings_from_query(st.secrets["GROQ_API_KEY"], stock, db_query, user_question)
             st.write(groq_analysis)
-    else:
-        st.error("Couldn't get the database intialized!")
+        else:
+            st.error("Couldn't get the database intialized!")
