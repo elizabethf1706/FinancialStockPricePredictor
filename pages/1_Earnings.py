@@ -11,7 +11,7 @@ from chroma import add_ticker_to_chroma
 @st.cache_resource
 def initialize_chromadb():
     try:
-        return chromadb.Client(path="./chroma")
+        return chromadb.Client()
     except Exception as e:
         print(f"Error initializing ChromaDB client: {e}")
         return None
