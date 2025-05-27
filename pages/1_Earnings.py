@@ -2,7 +2,7 @@ import streamlit as st
 try:
     import chromadb
 except Exception as e:
-        print("Couldn't import stuff for chromadb")
+    print("Couldn't import chromadb")
 import os
 from advise_earnings import advise_earnings_from_query
 from chroma import add_ticker_to_chroma
@@ -10,13 +10,13 @@ from chroma import add_ticker_to_chroma
 
 @st.cache_resource
 def initialize_chromadb():
-    try:
-        return chromadb.Client()
-    except Exception as e:
-        print(f"Error initializing ChromaDB client: {e}")
-        return None
+    return chromadb.Client()
 
-CLIENT = initialize_chromadb()
+try:
+    CLIENT = initialize_chromadb()
+except Exception as e:
+    pass
+
 
 st.subheader("💬 Ask Groq")
 stock = st.text_input("Ask Groq about the most recent earnings calls", "TSLA")
