@@ -1,7 +1,6 @@
 import streamlit as st
 try:
     import chromadb
-    from chromadb.config import Settings
 except Exception as e:
         print("Couldn't import stuff for chromadb")
 import os
@@ -12,10 +11,7 @@ from chroma import add_ticker_to_chroma
 @st.cache_resource
 def initialize_chromadb():
     try:
-        return chromadb.Client(Settings(
-                                chroma_db_impl="duckdb+parquet",
-                                persist_directory="chroma/",
-                                anonymized_telemetry=False))
+        return chromadb.Client()
     except Exception as e:
         print(f"Error initializing ChromaDB client: {e}")
         return None
