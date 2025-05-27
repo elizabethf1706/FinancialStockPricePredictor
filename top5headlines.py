@@ -2,7 +2,7 @@
 def get_top_headlines(stock_keyword): 
     "pull top 5 headlines for a stock and prints them"
     end_date = datetime.now()
-    start_date = end_date - timedelta(days=30)
+    start_date = end_date - timedelta(days=7)
 
     try:
         headlines = newsapi.get_everything(

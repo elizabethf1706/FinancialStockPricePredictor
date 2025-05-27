@@ -57,7 +57,7 @@ def get_wordcloud(api_key, stock_keyword):
         return None
 
     try:
-        wordcloud = WordCloud(width=1000, height=500, background_color='white', stopwords=final_stopwords).generate(combined_text)
+        wordcloud = WordCloud(width=1000, height=500, background_color='white', stopwords=final_stopwords, max_words=30).generate(combined_text)
         fig, ax = plt.subplots(figsize=(12, 6))
         ax.imshow(wordcloud, interpolation='bilinear')
         ax.axis("off")
