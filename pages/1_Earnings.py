@@ -15,7 +15,7 @@ def initialize_chromadb():
 try:
     CLIENT = initialize_chromadb()
 except Exception as e:
-    pass
+    CLIENT = None
 
 
 st.subheader("💬 Ask Groq")
