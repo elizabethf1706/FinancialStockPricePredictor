@@ -13,7 +13,9 @@ from chroma import add_ticker_to_chroma
 def initialize_chromadb():
     try:
         return chromadb.Client(Settings(
-                                persist_directory="chromadb/"))
+                                chroma_db_impl="duckdb+parquet",
+                                persist_directory="chroma",
+                                anonymized_telemetry=False))
     except Exception as e:
         print(f"Error initializing ChromaDB client: {e}")
         return None
