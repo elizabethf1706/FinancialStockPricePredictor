@@ -1,21 +1,20 @@
 import streamlit as st
-try:
-    import chromadb
-except Exception as e:
-        print("Couldn't import stuff for chromadb")
+import chromadb
 import os
 from advise_earnings import advise_earnings_from_query
-from chroma import add_ticker_to_chroma
+from add_to_chroma import add_ticker_to_chroma
+
+GROQ_API_KEY=st.secrets["GROQ_API_KEY"]
 
 
 @st.cache_resource
 def initialize_chromadb():
-    return chromadb.PersistentClient(path="./chroma")
+    return chromadb.Client()
 
 try:
     CLIENT = initialize_chromadb()
 except Exception as e:
-    print(e)
+    st.write(e)
     CLIENT = None
 
 st.subheader("💬 Ask Groq")
@@ -36,10 +35,10 @@ if st.button("Ask"):
             
             db_query = stock_collection.query(
                 query_texts=[user_question],
-                n_results=10
+                n_results=6
             )
             print(f"[{os.path.basename(__file__)}]  Got query results")
-            groq_analysis = advise_earnings_from_query(st.secrets["GROQ_API_KEY"], stock, db_query, user_question)
+            groq_analysis = advise_earnings_from_query(GROQ_API_KEY, stock, db_query, user_question)
             st.write(groq_analysis)
     else:
         st.error("Couldn't get the database intialized!")
