@@ -14,7 +14,7 @@ def initialize_chromadb():
     try:
         return chromadb.Client(Settings(
                                 chroma_db_impl="duckdb+parquet",
-                                persist_directory="chroma",
+                                persist_directory="chroma/",
                                 anonymized_telemetry=False))
     except Exception as e:
         print(f"Error initializing ChromaDB client: {e}")
